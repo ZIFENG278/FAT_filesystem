@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include "osca.h"
+//#include "osca.h"
 #define LEN 10
 char *s_gets(char *st, int n);
 
@@ -20,7 +20,7 @@ int main(void)
     enum os_function operation;
     bool choice_is_found = false;
 
-    FILE *fp = open_fs("OSCAFS");
+    //FILE *fp = open_fs("OSCAFS");
 
     puts("Enter a operation please (empty line to quit) :");
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
@@ -29,7 +29,7 @@ int main(void)
         {
             if (strcmp(choice, function_name[operation]) == 0)
             {
-                choice_is_found = ture;
+                choice_is_found = true;
                 break;
             }
         }
@@ -38,25 +38,29 @@ int main(void)
             switch (operation)
             {
             case write:
-                fs_write();
+                printf("write success\n"); //test
+                //fs_write();
                 break;
 
             case read:
-                fs_read();
+                printf("read success\n"); //test
+                //fs_read();
                 break;
 
             case copy:
-                fs_copy() break;
+                printf("copy success\n"); //test
+                //fs_copy();
+                break;
             }
 
         else
-            printf("OSCA FS haven't %s operation", choice);
+            printf("OSCA FS haven't %s operation\n", choice);
 
         choice_is_found = false;
         puts("Enter next operation (empty line to quit) :");
     }
 
-    close_fs(fp);
+    //close_fs(fp);
     puts("OSCA FS close");
 
     return 0;

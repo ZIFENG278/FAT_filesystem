@@ -2,32 +2,34 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
-//#include "osca.h"
-#define LEN 10
-char *s_gets(char *st, int n);
+#include <unistd.h>
+#include "oscafs.h"
+#define LEN 10 // neame of operation only 10 character
+//char *s_gets(char *st, int n);
 
-enum os_function
+/*enum os_function
 {
     write,
     read,
     copy
-};
+};*/
 const char *function_name[] = {"write", "read", "copy"};
 
 int main(void)
 {
     char choice[LEN];
-    enum os_function operation;
+    //enum os_function operation;
+    int op = 0;
     bool choice_is_found = false;
 
-    //FILE *fp = open_fs("OSCAFS");
+    FILE *fp = open_fs("OSCAFS");
 
     puts("Enter a operation please (empty line to quit) :");
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
     {
-        for (operation = write; operation <= copy; operation++)
+        for (op = 0; op <= 2; op++)
         {
-            if (strcmp(choice, function_name[operation]) == 0)
+            if (strcmp(choice, function_name[op]) == 0)
             {
                 choice_is_found = true;
                 break;
@@ -35,19 +37,19 @@ int main(void)
         }
 
         if (choice_is_found)
-            switch (operation)
+            switch (op)
             {
-            case write:
-                printf("write success\n"); //test
-                //fs_write();
+            case 0:
+                //printf("write success\n");
+                os_write_first(fp);
                 break;
 
-            case read:
+            case 1:
                 printf("read success\n"); //test
                 //fs_read();
                 break;
 
-            case copy:
+            case 2:
                 printf("copy success\n"); //test
                 //fs_copy();
                 break;
@@ -60,13 +62,13 @@ int main(void)
         puts("Enter next operation (empty line to quit) :");
     }
 
-    //close_fs(fp);
+    close_fs(fp);
     puts("OSCA FS close");
 
     return 0;
 }
 
-char *s_gets(char *st, int n)
+/*char *s_gets(char *st, int n)
 {
     char *ret_val;
     char *find;
@@ -82,5 +84,6 @@ char *s_gets(char *st, int n)
             while (getchar() != '\n')
                 continue; //clean the input cache
     }
-    return ret_val;
+    return ret_val; 
 }
+*/

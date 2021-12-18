@@ -64,13 +64,16 @@ void close_fs(FILE *fp)
 
 void os_write_first(FILE *fp)
 {
-    int fd; // dentry row number
-    int fb; //first block
-    int nb; // next block number
+    int fd;          // dentry row number
+    int fb;          //first block
+    int nb;          // next block number
+    int data_length; // Count the number of characters
     char str[STR_LEN];
-    char data[BLOCK_SIZE];
+    //char data[BLOCK_SIZE];
     char spdata[5 * BLOCK_SIZE];
+    char *pt;
     bool same_name = false;
+    pt = spdata;
     if ((return_first_entry()) >= 0)
     {
         puts("Enter the name of file:");
@@ -105,30 +108,47 @@ void os_write_first(FILE *fp)
                 printf("%s is No.%d in dentry and ", str, fd);
                 printf("begin in %d block\n", fb);
                 puts("Please input data:");
-                /*s_gets(spdata, 5 * BLOCK_SIZE); // try to write data size bigger than BLOCK_SIZE
-                int length;
-                if (length = (strlen(spdata)) > BLOCK_SIZE)
-                {
-                    int num_block;
-                    if (length % BLOCK_SIZE == 0)
-                        num_block = length / BLOCK_SIZE;
-                    else
-                        num_block = (length / BLOCK_SIZE) + 1;
-                    for (int count = 1; count < num_block; count++)
-                    {
-                        nb = add_next_block(fb);
-                        fb = nb;
-                    }
-                }
+                s_gets(spdata, TIME_BLOCK * BLOCK_SIZE); // try to write data size bigger than BLOCK_SIZE
+                //int data_length;
+                printf("spdata: %s\n", spdata); //fot test
+                printf("data strlen is %d\n", strlen(spdata));
 
+                int num_block;
+                data_length = strlen(spdata);
+                if (data_length % BLOCK_SIZE == 0)
+                    num_block = data_length / BLOCK_SIZE;
                 else
+                    num_block = (data_length / BLOCK_SIZE) + 1;
+
+                printf("this file use %d block\n", num_block);
+                //puts("blocks: ");
+                char databuf[num_block][BLOCK_SIZE];
+                for (int count = 0; count < num_block; count++)
                 {
+                    //char databuf[BLOCK_SIZE];
+                    strncpy(databuf[count], pt + (sizeof(spdata) - (TIME_BLOCK - count) * BLOCK_SIZE), BLOCK_SIZE);
+                    databuf[count][BLOCK_SIZE] = '\0';
+                    printf("databuf%d: %s\n", count + 1, databuf[count]); //for check data if correct
+                    write_block(fb, databuf[count], fp);
+                    //printf("%d ", fb); // for test
+                    nb = add_next_block(fb);
+                    //printf("next block ready write in %d\n", nb); //for test
+                    fb = nb;
+                }
+                puts("Enter file name to write new one (empty to quit)");
+
+                /*else
+                {
+                    printf("this file use one block: %d\n", fb);
+                    char data[BLOCK_SIZE];
+                    strncpy(data, spdata, BLOCK_SIZE);
+                    printf("data: %s\n", data); //for test
                     write_block(fb, data, fp);
                     puts("Enter file name to write new one (empty to quit)");
                 }*/
-                s_gets(data, BLOCK_SIZE);
-                write_block(fb, data, fp);
-                puts("Enter file name to write new one (empty to quit write mode)");
+                /*s_gets(data, BLOCK_SIZE);
+                write_block(fb, data, fp); // write only block 
+                puts("Enter file name to write new one (empty to quit write mode)");*/
             }
         }
     }

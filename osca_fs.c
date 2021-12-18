@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include "oscafs.h"
-#define LEN 10 // neame of operation only 10 character
+#define LEN 20 // neame of operation only 10 character
 //char *s_gets(char *st, int n);
 
 /*enum os_function
@@ -13,7 +13,7 @@
     read,
     copy
 };*/
-const char *function_name[] = {"write", "read", "copy"};
+char *function_name[] = {"write", "read", "copy", "ls", "ls -l"};
 
 int main(void)
 {
@@ -27,7 +27,7 @@ int main(void)
     puts("Enter a operation please (empty line to quit) :");
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
     {
-        for (op = 0; op <= 2; op++)
+        for (op = 0; op <= 4; op++)
         {
             if (strcmp(choice, function_name[op]) == 0)
             {
@@ -53,17 +53,23 @@ int main(void)
                 printf("copy success\n"); //test
                 //fs_copy();
                 break;
+            case 3:
+                os_list();
+                break;
+            case 4:
+                os_list_detial();
+                break;
             }
 
         else
             printf("OSCA FS haven't %s operation\n", choice);
 
         choice_is_found = false;
-        puts("Enter next operation (empty line to quit) :");
+        puts("Enter next operation (empty line to quit OSCAFS) :");
     }
 
     close_fs(fp);
-    puts("OSCA FS close");
+    puts("OSCAFS close");
 
     return 0;
 }

@@ -1,10 +1,11 @@
 #include <stdio.h>
 
 #define NB_BLOCKS 512
-#define BLOCK_SIZE 1024
+#define BLOCK_SIZE 8
 
 #define NUM_DENTRY 5
 #define STR_LEN 256
+#define TIME_BLOCK 5 // for write maximum 5 block for one time
 
 /*
   Directory Entry definition

@@ -7,14 +7,16 @@
 #define STR_LEN 256
 #define TIME_BLOCK 5 // for write maximum 5 block for one time
 
+#define EOF_BLK -1
+
 /*
   Directory Entry definition
  */
 
 typedef struct
 {
-    int num;
-    char str[STR_LEN];
+   int num;
+   char str[STR_LEN];
 } str_t;
 
 void clear_entry(int i);
@@ -71,3 +73,7 @@ FILE *open_fs(char *su_file);
 void close_fs(FILE *fp);
 
 void os_write_first(FILE *fp);
+
+void os_list(void);
+
+void os_list_detial(void);

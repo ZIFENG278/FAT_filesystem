@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include "oscafs.h"
 #define NAME_LEN 128
+extern str_t dentry[NUM_DENTRY];
+extern int fat[NB_BLOCKS];
 
 char *s_gets(char *st, int n) //instead gets
 {
@@ -74,6 +76,7 @@ void os_write_first(FILE *fp)
     char *pt;
     bool same_name = false;
     pt = spdata;
+    int count_alloc;
     if ((return_first_entry()) >= 0)
     {
         puts("Enter the name of file:");
@@ -105,13 +108,15 @@ void os_write_first(FILE *fp)
                     break;
                 }
                 fb = write_firstblock_num(fd);
+                count_alloc = 1;
                 printf("%s is No.%d in dentry and ", str, fd);
                 printf("begin in %d block\n", fb);
                 puts("Please input data:");
                 s_gets(spdata, TIME_BLOCK * BLOCK_SIZE); // try to write data size bigger than BLOCK_SIZE
                 //int data_length;
                 printf("spdata: %s\n", spdata); //fot test
-                printf("data strlen is %d\n", strlen(spdata));
+                spdata[TIME_BLOCK * BLOCK_SIZE] = '\0';
+                printf("spdata strlen is %d\n", strlen(spdata));
 
                 int num_block;
                 data_length = strlen(spdata);
@@ -128,12 +133,17 @@ void os_write_first(FILE *fp)
                     //char databuf[BLOCK_SIZE];
                     strncpy(databuf[count], pt + (sizeof(spdata) - (TIME_BLOCK - count) * BLOCK_SIZE), BLOCK_SIZE);
                     databuf[count][BLOCK_SIZE] = '\0';
-                    printf("databuf%d: %s\n", count + 1, databuf[count]); //for check data if correct
+                    printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
                     write_block(fb, databuf[count], fp);
                     //printf("%d ", fb); // for test
-                    nb = add_next_block(fb);
+                    if (count_alloc < num_block)
+                    {
+                        nb = add_next_block(fb);
+                        fb = nb;
+                        count_alloc++;
+                    }
+
                     //printf("next block ready write in %d\n", nb); //for test
-                    fb = nb;
                 }
                 puts("Enter file name to write new one (empty to quit)");
 
@@ -169,3 +179,37 @@ void os_write_first(FILE *fp)
     }
 }
 */
+
+void os_list(void)
+{
+    int i;
+    for (i = 0; i < NUM_DENTRY; i++)
+    {
+        if (dentry[i].str[0] != '\0')
+            printf("%s\n", dentry[i].str); //for test
+    }
+}
+
+void os_list_detial(void)
+{
+    int i;
+    int fb;
+    int temp;
+    for (i = 0; i < NUM_DENTRY; i++)
+    {
+        if (dentry[i].str[0] != '\0')
+        {
+            printf("No.%d: %-10s", i, dentry[i].str);
+            printf("blocks: %d ", dentry[i].num);
+            fb = dentry[i].num;
+            while (fat[fb] != EOF_BLK)
+            {
+                temp = next_block(fb);
+                fb = temp;
+                printf("%d ", fb);
+            }
+
+            puts("\n");
+        }
+    }
+}

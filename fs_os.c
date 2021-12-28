@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include "oscafs.h"
-#define NAME_LEN 128
+//#define NAME_LEN 128
 extern str_t dentry[NUM_DENTRY];
 extern int fat[NB_BLOCKS];
 
@@ -211,5 +211,117 @@ void os_list_detial(void)
 
             puts("\n");
         }
+    }
+}
+
+int os_read(FILE *fp) // mistake in can not identif the input name
+{
+    int i;  //for check empty dentry
+    int j;  //for select file
+    int fb; // first block in file
+    bool have_file = false;
+    char file_name[NAME_LEN];
+    char data[BLOCK_SIZE];
+    int temp; //for change the value of fat table
+    for (i = 0; i < NUM_DENTRY; i++)
+    {
+        if (dentry[i].str[0] != '\0')
+        {
+            have_file = true;
+        }
+    }
+
+    if (have_file)
+    {
+        printf("\n");
+        puts("plese choice a file:");
+        os_list();
+        bool true_name = false;
+        while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
+        {
+            for (j = 0; j < NUM_DENTRY; j++)
+            {
+                if (strcmp(file_name, dentry[j].str) == 0)
+                {
+                    true_name = true;
+                    break;
+                }
+            }
+
+            if (true_name)
+            {
+                printf("\n");
+                fb = dentry[j].num;
+                // printf("%d\n", fb); //for test
+                read_block(fb, data, fp);
+                data[BLOCK_SIZE] = '\0';
+                printf("%s", data);
+                while (fat[fb] != EOF_BLK)
+                {
+                    char bufdata[BLOCK_SIZE + 1];
+                    temp = next_block(fb);
+                    fb = temp;
+                    read_block(fb, bufdata, fp);
+                    bufdata[BLOCK_SIZE] = '\0';
+                    printf("%s", bufdata);
+                }
+                printf("\ndone\n");
+                puts("Enter file name to read other one (empty to quit)");
+            }
+
+            else
+            {
+                printf("%s can not find in OSCAFS\n", file_name);
+                puts("please try again (empty line to quit)");
+                continue;
+            }
+
+            true_name = false;
+        }
+    }
+
+    else
+        puts("No any file");
+}
+
+/*void os_copy_host(FILE *fp)
+{
+    FILE *fq;                 //a file from host
+    char file_name[NAME_LEN]; //host file
+    char spdata[5 * BLOCK_SIZE];
+    char data[BLOCK_SIZE];
+    puts("please input a host file name");
+    while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
+    {
+        if ((fq = fopen(file_name, "r+")) == NULL)
+        {
+            printf("%s cannot read or can not fine this file in host\n", fq);
+            puts("please try again (empty to quit)");
+            continue;
+        }
+
+        else
+        {
+            rewind(fq);
+            fread();
+        }
+    }
+}*/
+
+void os_copy_OSCAFS(FILE *fp);
+{
+    char file_name[NAME_LEN];
+    
+    puts("please input a file name");
+    os_list();
+
+}
+
+void os_fat(void)
+{
+    printf("File Allocation Table:\n");
+    for (int i = 0; i < NB_BLOCKS; i++)
+    {
+        printf("%d %d\n", i, get_fat()[i]);
     }
 }

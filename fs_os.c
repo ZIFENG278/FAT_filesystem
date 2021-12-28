@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <sys/stat.h>
 #include "oscafs.h"
 //#define NAME_LEN 128
 extern str_t dentry[NUM_DENTRY];
@@ -258,7 +259,7 @@ void os_read(FILE *fp) // mistake in can not identif the input name
                 printf("%s", data);
                 while (fat[fb] != EOF_BLK)
                 {
-                    char bufdata[BLOCK_SIZE + 1];
+                    char bufdata[BLOCK_SIZE];
                     temp = next_block(fb);
                     fb = temp;
                     read_block(fb, bufdata, fp);
@@ -282,39 +283,6 @@ void os_read(FILE *fp) // mistake in can not identif the input name
 
     else
         puts("No any file");
-}
-
-/*void os_copy_host(FILE *fp)
-{
-    FILE *fq;                 //a file from host
-    char file_name[NAME_LEN]; //host file
-    char spdata[5 * BLOCK_SIZE];
-    char data[BLOCK_SIZE];
-    puts("please input a host file name");
-    while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
-    {
-        if ((fq = fopen(file_name, "r+")) == NULL)
-        {
-            printf("%s cannot read or can not fine this file in host\n", fq);
-            puts("please try again (empty to quit)");
-            continue;
-        }
-
-        else
-        {
-            rewind(fq);
-            fread();
-        }
-    }
-}*/
-
-void os_copy_OSCAFS(FILE *fp);
-{
-    char file_name[NAME_LEN];
-    
-    puts("please input a file name");
-    os_list();
-
 }
 
 void os_fat(void)

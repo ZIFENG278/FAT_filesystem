@@ -81,6 +81,8 @@ void os_list_detial(void);
 
 void os_read(FILE *fp);
 
-void os_copy(FILE *fp);
+void os_copy_host(FILE *fp);
 
 void os_fat(void);
+
+int file_size(char *filename);

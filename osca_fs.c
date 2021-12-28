@@ -13,7 +13,7 @@ char *s_gets(char *st, int n);
     read,
     copy
 };*/
-char *function_name[] = {"write", "read", "copy", "ls", "ls -l", "FAT"};
+char *function_name[] = {"write", "read", "copy host", "ls", "ls -l", "FAT"};
 
 int main(void)
 {
@@ -50,8 +50,11 @@ int main(void)
                 break;
 
             case 2:
-                printf("copy success\n"); //test
-                //os_copy();
+                //printf("copy success\n"); //test
+                os_copy_host(fp);
+                //printf("%d\n", file_size2()); //for test
+                //printf("%d\n", file_size()); //for test
+
                 break;
 
             case 3:

@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "oscafs.h"
 #define LEN 20 // neame of operation only 10 character
-//char *s_gets(char *st, int n);
+char *s_gets(char *st, int n);
 
 /*enum os_function
 {
@@ -13,7 +13,7 @@
     read,
     copy
 };*/
-char *function_name[] = {"write", "read", "copy", "ls", "ls -l"};
+char *function_name[] = {"write", "read", "copy", "ls", "ls -l", "FAT"};
 
 int main(void)
 {
@@ -27,7 +27,7 @@ int main(void)
     puts("Enter a operation please (empty line to quit) :");
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
     {
-        for (op = 0; op <= 4; op++)
+        for (op = 0; op <= 5; op++) //need to change op <= when add a operation
         {
             if (strcmp(choice, function_name[op]) == 0)
             {
@@ -45,19 +45,25 @@ int main(void)
                 break;
 
             case 1:
-                printf("read success\n"); //test
-                //fs_read();
+                //printf("read success\n"); //test
+                os_read(fp);
                 break;
 
             case 2:
                 printf("copy success\n"); //test
-                //fs_copy();
+                //os_copy();
                 break;
+
             case 3:
                 os_list();
                 break;
+
             case 4:
                 os_list_detial();
+                break;
+
+            case 5:
+                os_fat();
                 break;
             }
 
@@ -90,6 +96,5 @@ int main(void)
             while (getchar() != '\n')
                 continue; //clean the input cache
     }
-    return ret_val; 
-}
-*/
+    return ret_val;
+}*/

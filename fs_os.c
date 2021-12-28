@@ -214,7 +214,7 @@ void os_list_detial(void)
     }
 }
 
-int os_read(FILE *fp) // mistake in can not identif the input name
+void os_read(FILE *fp) // mistake in can not identif the input name
 {
     int i;  //for check empty dentry
     int j;  //for select file

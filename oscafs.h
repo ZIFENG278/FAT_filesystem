@@ -6,6 +6,7 @@
 #define NUM_DENTRY 5
 #define STR_LEN 256
 #define TIME_BLOCK 5 // for write maximum 5 block for one time
+#define NAME_LEN 128
 
 #define EOF_BLK -1
 
@@ -77,3 +78,9 @@ void os_write_first(FILE *fp);
 void os_list(void);
 
 void os_list_detial(void);
+
+void os_read(FILE *fp);
+
+void os_copy(FILE *fp);
+
+void os_fat(void);

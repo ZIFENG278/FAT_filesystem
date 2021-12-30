@@ -22,4 +22,4 @@ clean:
 	rm -f *~
 	rm -f *.o
 	rm -f ${TARGET}
-	rm -f OSCAFS
+	

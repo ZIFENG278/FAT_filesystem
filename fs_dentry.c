@@ -53,8 +53,8 @@ int return_first_entry()
 */
 int write_entry(int i, char *str)
 {
-    char *dest = strncpy(dentry[i].str, str, STR_LEN);
-    dentry[i].str[STR_LEN - 1] = '\0';
+    char *dest = strncpy(dentry[i].str, str, NAME_LEN);
+    dentry[i].str[NAME_LEN - 1] = '\0';
 
     return strlen(dest);
 }

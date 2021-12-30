@@ -4,11 +4,14 @@
 #define BLOCK_SIZE 8
 
 #define NUM_DENTRY 5
-#define STR_LEN 256
+//#define STR_LEN 256
 #define TIME_BLOCK 5 // for write maximum 5 block for one time
-#define NAME_LEN 128
+#define NAME_LEN 256
 
 #define EOF_BLK -1
+#define GREEN "\033[1;32m"
+#define YELLOW "\033[1;33m"
+#define NONE "\033[0m"
 
 /*
   Directory Entry definition
@@ -17,7 +20,7 @@
 typedef struct
 {
    int num;
-   char str[STR_LEN];
+   char str[NAME_LEN];
 } str_t;
 
 void clear_entry(int i);
@@ -81,8 +84,13 @@ void os_list_detial(void);
 
 void os_read(FILE *fp);
 
-void os_copy_host(FILE *fp);
-
 void os_fat(void);
 
+void os_seek(void);
+
+//os copy function
 int file_size(char *filename);
+
+void os_copy_host(FILE *fp);
+
+void os_copy_OSCAFS(FILE *fp);

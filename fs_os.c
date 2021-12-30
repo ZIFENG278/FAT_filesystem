@@ -187,7 +187,7 @@ void os_list(void)
     for (i = 0; i < NUM_DENTRY; i++)
     {
         if (dentry[i].str[0] != '\0')
-            printf("%s ", dentry[i].str); //for test
+            printf("%s  ", dentry[i].str); //for test
     }
     printf("\n");
 }
@@ -208,7 +208,7 @@ void os_list_detial(void)
             {
                 temp = next_block(fb);
                 fb = temp;
-                printf("%d  ", fb);
+                printf("%d ", fb);
             }
 
             printf("\n");

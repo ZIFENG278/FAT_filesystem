@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <sys/stat.h>
 #include "oscafs.h"
+extern str_t dentry[NUM_DENTRY];
+extern int fat[NB_BLOCKS];
 
 int file_size(char *filename)
 {
@@ -14,14 +16,6 @@ int file_size(char *filename)
 
     return size;
 }
-
-/*void os_copy_OSCAFS(FILE *fp);
-{
-    char file_name[NAME_LEN];
-
-    puts("please input a file name");
-    os_list();
-}*/
 
 void os_copy_host(FILE *fp)
 {
@@ -40,14 +34,14 @@ void os_copy_host(FILE *fp)
     int count_alloc;
     if ((return_first_entry()) >= 0)
     {
-        puts("please input a host file name");
+        printf(YELLOW "please input a host file name: " NONE);
 
         while (s_gets(file_name_copy, NAME_LEN) != NULL && file_name_copy[0] != '\0') // check is it have same name file
         {
             if ((file_host = fopen(file_name_copy, "r+")) == NULL)
             {
-                fprintf(stderr, "Cannot open the %s file\n", file_name_copy);
-                puts("please try other file");
+                fprintf(stderr, "Cannot open or find the \"%s\" file, please try other file\n", file_name_copy);
+                //puts("please try other file");
                 continue;
             }
 
@@ -62,8 +56,8 @@ void os_copy_host(FILE *fp)
 
             if (same_name)
             {
-                printf("the file %s have been exist, cannot copy same name file\n", file_name_copy);
-                puts("try again");
+                printf("the file \"%s\" have been exist, cannot copy same name file, try again\n", file_name_copy);
+                //puts("try again");
                 same_name = false;
                 continue;
             }
@@ -72,7 +66,7 @@ void os_copy_host(FILE *fp)
             {
                 int num_block;
                 int size = file_size(file_name_copy) - 1;
-                //printf("%d\n", size); //for test
+                //printf("for test size: %d\n", size); //for test
                 if (size % BLOCK_SIZE == 0)
                     num_block = size / BLOCK_SIZE;
                 else
@@ -83,9 +77,10 @@ void os_copy_host(FILE *fp)
                 char spdata[num_block * BLOCK_SIZE];
                 pt = spdata;
                 fread(spdata, size, 1, file_host);
-                spdata[num_block * BLOCK_SIZE] = '\0';
-                printf("spdata:%s\n", spdata); // for test
-                printf("spdata strlen is %d\n", strlen(spdata));
+                spdata[size] = '\0';
+                //spdata[num_block * BLOCK_SIZE] = '\0';
+                //printf("spdata:%s\n", spdata); // for test
+                //printf("spdata strlen is %d\n", strlen(spdata));
                 fd = write_first_free(file_name_copy);
                 if (fd < 0)
                 {
@@ -94,15 +89,15 @@ void os_copy_host(FILE *fp)
                 }
                 fb = write_firstblock_num(fd);
 
-                printf("%s is No.%d in dentry and ", file_name_copy, fd);
-                printf("begin in %d block\n", fb);
+                //printf("%s is No.%d in dentry and ", file_name_copy, fd);
+                //printf("begin in %d block\n", fb);
                 count_alloc = 1;
                 //puts("Please input data:");
                 //s_gets(spdata, TIME_BLOCK * BLOCK_SIZE); // try to write data size bigger than BLOCK_SIZE
                 //int data_length;
                 //printf("spdata: %s\n", spdata); //fot test
                 //spdata[count_alloc * BLOCK_SIZE] = '\0';
-                //printf("spdata strlen is %d\n", strlen(spdata));
+                //printf("spdata strlen is %d\n", strlen(spdata)); //for test
 
                 //int num_block;
                 //data_length = strlen(spdata);
@@ -111,14 +106,14 @@ void os_copy_host(FILE *fp)
                 //else
                 // num_block = (data_length / BLOCK_SIZE) + 1;
 
-                printf("this file use %d block\n", num_block);
+                //printf("this file use %d block\n", num_block); //for test
                 char databuf[num_block][BLOCK_SIZE];
                 for (int count = 0; count < num_block; count++)
                 {
                     //char databuf[BLOCK_SIZE];
                     strncpy(databuf[count], pt + (sizeof(spdata) - (num_block - count) * BLOCK_SIZE), BLOCK_SIZE);
                     databuf[count][BLOCK_SIZE] = '\0';
-                    printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
+                    //printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
                     write_block(fb, databuf[count], fp);
                     //printf("%d ", fb); // for test
                     if (count_alloc < num_block)
@@ -128,7 +123,8 @@ void os_copy_host(FILE *fp)
                         count_alloc++;
                     }
                 }
-                puts("Enter file name to copy new one to OSCAFS(empty to quit)");
+                fclose(file_host);
+                printf(YELLOW "Enter file name to copy new one to OSCAFS(empty to quit): " NONE);
             }
         }
     }
@@ -137,20 +133,90 @@ void os_copy_host(FILE *fp)
         printf("OSCAFS cannot contain more %d file\n", NUM_DENTRY);
 }
 
-/*FILE *open_fs(char *fs) // open OSCAFS
+void os_copy_OSCAFS(FILE *fp)
 {
-    FILE *fp;
+    FILE *file_host;
+    int i;  //for check empty dentry
+    int j;  //for select file
+    int fb; // first block in file
+    bool have_file = false;
+    char file_name[NAME_LEN];
+    char data[BLOCK_SIZE];
+    int temp; //for change the value of fat table
+    for (i = 0; i < NUM_DENTRY; i++)
+    {
+        if (dentry[i].str[0] != '\0')
+        {
+            have_file = true;
+        }
+    }
 
-    if ((fp = fopen(fs, "r+")) == NULL)
+    if (have_file)
     {
-        fprintf(stderr, "Cannot open the %s file", fs);
-        return NULL;
+        //printf("\n");
+        printf(YELLOW "plese choice a file: " NONE);
+        os_list();
+        bool true_name = false;
+        while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
+        {
+            for (j = 0; j < NUM_DENTRY; j++)
+            {
+                if (strcmp(file_name, dentry[j].str) == 0)
+                {
+                    true_name = true;
+                    break;
+                }
+            }
+
+            if (true_name)
+            {
+                if ((file_host = fopen(file_name, "w+")) == NULL)
+                {
+                    fprintf(stderr, "Cannot create the \"%s\" file", file_name);
+                    printf("please try other file or make sure the authority(empty to quit): ");
+                    continue;
+                }
+                else
+                {
+                    rewind(file_host);
+                    //printf("\n");
+                    fb = dentry[j].num;
+                    // printf("%d\n", fb); //for test
+                    read_block(fb, data, fp);
+                    data[BLOCK_SIZE] = '\0';
+                    //printf("%s", data);
+                    fwrite(data, BLOCK_SIZE, 1, file_host);
+                    int count_seek = 1;
+                    while (fat[fb] != EOF_BLK)
+                    {
+
+                        char bufdata[BLOCK_SIZE];
+                        temp = next_block(fb);
+                        fb = temp;
+                        read_block(fb, bufdata, fp);
+                        bufdata[BLOCK_SIZE] = '\0';
+                        //printf("%s", bufdata);
+                        fseek(file_host, count_seek * BLOCK_SIZE, SEEK_SET);
+                        fwrite(bufdata, BLOCK_SIZE, 1, file_host);
+                        count_seek++;
+                    }
+                    //printf("done\n");
+                    fclose(file_host);
+                    printf(YELLOW "Enter file name to copy other one (empty to quit): " NONE);
+                }
+            }
+
+            else
+            {
+                printf("%s can not find in OSCAFS\n", file_name);
+                printf(YELLOW "please try again (empty to quit): " NONE);
+                continue;
+            }
+
+            true_name = false;
+        }
     }
+
     else
-    {
-        rewind(fp);
-        fread(get_dentry(), sizeof(str_t), NUM_DENTRY, fp);
-        fread(get_fat(), sizeof(int), NB_BLOCKS, fp);
-    }
-    return fp;
-}*/
+        puts("No any file");
+}

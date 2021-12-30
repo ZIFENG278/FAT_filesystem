@@ -36,7 +36,7 @@ FILE *open_fs(char *fs) // open OSCAFS
     {
         if ((fp = fopen(fs, "w+")) == NULL)
         {
-            fprintf(stderr, "Cannot open or create the %s file", fs);
+            fprintf(stderr, "Cannot open or create the \"%s\" file", fs);
             return NULL;
         }
         else
@@ -71,7 +71,7 @@ void os_write_first(FILE *fp)
     int fb;          //first block
     int nb;          // next block number
     int data_length; // Count the number of characters
-    char str[STR_LEN];
+    char str[NAME_LEN];
     //char data[BLOCK_SIZE];
     char spdata[5 * BLOCK_SIZE];
     char *pt;
@@ -80,7 +80,7 @@ void os_write_first(FILE *fp)
     int count_alloc;
     if ((return_first_entry()) >= 0)
     {
-        puts("Enter the name of file:");
+        printf(YELLOW "Enter the name of file: " NONE);
         while (s_gets(str, NAME_LEN) != NULL && str[0] != '\0') // check is it have same name file
         {
             for (int i = 0; i < NUM_DENTRY; i++)
@@ -94,8 +94,8 @@ void os_write_first(FILE *fp)
 
             if (same_name)
             {
-                printf("the file %s have been exist, cannot creat same name file\n", str);
-                puts("try again");
+                printf("the file \"%s\" have been exist, cannot creat same name file, try again(empty to qiut)\n", str);
+                //puts("try again");
                 same_name = false;
                 continue;
             }
@@ -105,19 +105,19 @@ void os_write_first(FILE *fp)
                 fd = write_first_free(str);
                 if (fd < 0)
                 {
-                    printf("OSCAFS cannot contain more %d file\n", NUM_DENTRY);
+                    printf("OSCAFS cannot contain more than %d file\n", NUM_DENTRY);
                     break;
                 }
                 fb = write_firstblock_num(fd);
                 count_alloc = 1;
-                printf("%s is No.%d in dentry and ", str, fd);
-                printf("begin in %d block\n", fb);
-                puts("Please input data:");
+                //printf("%s is No.%d in dentry and ", str, fd);
+                //printf("begin in %d block\n", fb);
+                puts(YELLOW "Please input data:" NONE);
                 s_gets(spdata, TIME_BLOCK * BLOCK_SIZE); // try to write data size bigger than BLOCK_SIZE
                 //int data_length;
-                printf("spdata: %s\n", spdata); //fot test
+                //printf("spdata: %s\n", spdata); //fot test
                 spdata[TIME_BLOCK * BLOCK_SIZE] = '\0';
-                printf("spdata strlen is %d\n", strlen(spdata));
+                //printf("spdata strlen is %d\n", strlen(spdata));
 
                 int num_block;
                 data_length = strlen(spdata);
@@ -126,7 +126,7 @@ void os_write_first(FILE *fp)
                 else
                     num_block = (data_length / BLOCK_SIZE) + 1;
 
-                printf("this file use %d block\n", num_block);
+                //printf("this file use %d block\n", num_block);
                 //puts("blocks: ");
                 char databuf[num_block][BLOCK_SIZE];
                 for (int count = 0; count < num_block; count++)
@@ -134,7 +134,7 @@ void os_write_first(FILE *fp)
                     //char databuf[BLOCK_SIZE];
                     strncpy(databuf[count], pt + (sizeof(spdata) - (TIME_BLOCK - count) * BLOCK_SIZE), BLOCK_SIZE);
                     databuf[count][BLOCK_SIZE] = '\0';
-                    printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
+                    //printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
                     write_block(fb, databuf[count], fp);
                     //printf("%d ", fb); // for test
                     if (count_alloc < num_block)
@@ -146,7 +146,7 @@ void os_write_first(FILE *fp)
 
                     //printf("next block ready write in %d\n", nb); //for test
                 }
-                puts("Enter file name to write new one (empty to quit)");
+                printf(YELLOW "Enter file name to write new one (empty to quit): " NONE);
 
                 /*else
                 {
@@ -165,7 +165,7 @@ void os_write_first(FILE *fp)
     }
 
     else
-        printf("OSCAFS cannot contain more %d file\n", NUM_DENTRY);
+        printf("OSCAFS cannot contain more than %d file\n", NUM_DENTRY);
 }
 
 /*void os_write_end(char *filename)
@@ -187,8 +187,9 @@ void os_list(void)
     for (i = 0; i < NUM_DENTRY; i++)
     {
         if (dentry[i].str[0] != '\0')
-            printf("%s\n", dentry[i].str); //for test
+            printf("%s ", dentry[i].str); //for test
     }
+    printf("\n");
 }
 
 void os_list_detial(void)
@@ -200,17 +201,17 @@ void os_list_detial(void)
     {
         if (dentry[i].str[0] != '\0')
         {
-            printf("No.%d: %-10s", i, dentry[i].str);
+            printf("No.%d: %-16s", i, dentry[i].str);
             printf("blocks: %d ", dentry[i].num);
             fb = dentry[i].num;
             while (fat[fb] != EOF_BLK)
             {
                 temp = next_block(fb);
                 fb = temp;
-                printf("%d ", fb);
+                printf("%d  ", fb);
             }
 
-            puts("\n");
+            printf("\n");
         }
     }
 }
@@ -234,8 +235,8 @@ void os_read(FILE *fp) // mistake in can not identif the input name
 
     if (have_file)
     {
-        printf("\n");
-        puts("plese choice a file:");
+        //printf("\n");
+        printf(YELLOW "please choice a file: " NONE);
         os_list();
         bool true_name = false;
         while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
@@ -251,7 +252,7 @@ void os_read(FILE *fp) // mistake in can not identif the input name
 
             if (true_name)
             {
-                printf("\n");
+                //printf("\n");
                 fb = dentry[j].num;
                 // printf("%d\n", fb); //for test
                 read_block(fb, data, fp);
@@ -266,14 +267,15 @@ void os_read(FILE *fp) // mistake in can not identif the input name
                     bufdata[BLOCK_SIZE] = '\0';
                     printf("%s", bufdata);
                 }
-                printf("\ndone\n");
-                puts("Enter file name to read other one (empty to quit)");
+                printf("\n");
+                //printf(YELLOW "\ndone\n" NONE);
+                printf(YELLOW "Enter file name to read other one (empty to quit): " NONE);
             }
 
             else
             {
-                printf("%s can not find in OSCAFS\n", file_name);
-                puts("please try again (empty line to quit)");
+                printf("\"%s\" can not find in OSCAFS\n", file_name);
+                printf(YELLOW "please try again (empty to quit): " NONE);
                 continue;
             }
 
@@ -287,9 +289,32 @@ void os_read(FILE *fp) // mistake in can not identif the input name
 
 void os_fat(void)
 {
-    printf("File Allocation Table:\n");
+    printf(YELLOW "File Allocation Table:\n" NONE);
     for (int i = 0; i < NB_BLOCKS; i++)
     {
         printf("%d %d\n", i, get_fat()[i]);
+    }
+}
+
+void os_seek(void)
+{
+    int i;
+    int count = 0;
+    char seek_input[NAME_LEN];
+    printf(YELLOW "please input the file name: " NONE);
+    while (s_gets(seek_input, NAME_LEN) != NULL && seek_input[0] != '\0')
+    {
+        for (i = 0; i < NUM_DENTRY; i++)
+        {
+            if (strncmp(dentry[i].str, seek_input, strlen(seek_input)) == 0)
+            {
+                printf("%s ", dentry[i].str);
+                count++;
+            }
+        }
+        printf("\n");
+        printf(GREEN "%d result\n" NONE, count);
+        printf(YELLOW "input other file name to seek(empty to quit): " NONE);
+        count = 0;
     }
 }

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include "oscafs.h"
-#define LEN 20 // neame of operation only 10 character
+#define LEN 20 // neame of operation only 20 character
 char *s_gets(char *st, int n);
 
 /*enum os_function
@@ -13,7 +13,7 @@ char *s_gets(char *st, int n);
     read,
     copy
 };*/
-char *function_name[] = {"write", "read", "copy host", "ls", "ls -l", "FAT"};
+char *function_name[] = {"write", "read", "copy host", "ls", "ls -l", "FAT", "copy OSCAFS", "seek"};
 
 int main(void)
 {
@@ -24,10 +24,10 @@ int main(void)
 
     FILE *fp = open_fs("OSCAFS");
 
-    puts("Enter a operation please (empty line to quit) :");
+    printf(GREEN "Enter a operation please (empty to quit): " NONE);
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
     {
-        for (op = 0; op <= 5; op++) //need to change op <= when add a operation
+        for (op = 0; op <= 7; op++) //need to change op <= when add a operation
         {
             if (strcmp(choice, function_name[op]) == 0)
             {
@@ -68,13 +68,21 @@ int main(void)
             case 5:
                 os_fat();
                 break;
+
+            case 6:
+                os_copy_OSCAFS(fp);
+                break;
+
+            case 7:
+                os_seek();
+                break;
             }
 
         else
-            printf("OSCA FS haven't %s operation\n", choice);
+            printf("OSCAFS haven't \"%s\" operation\n", choice);
 
         choice_is_found = false;
-        puts("Enter next operation (empty line to quit OSCAFS) :");
+        printf(GREEN "Enter next operation (empty to quit OSCAFS): " NONE);
     }
 
     close_fs(fp);

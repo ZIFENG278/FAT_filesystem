@@ -27,7 +27,7 @@ void os_copy_host(FILE *fp)
     //char str[NAME_LEN];
     char file_name_copy[NAME_LEN];
     //char data[BLOCK_SIZE];
-    //char spdata[5 * BLOCK_SIZE];
+    //char spdata[TIME_BLOCK * BLOCK_SIZE];
     char *pt;
     bool same_name = false;
     //pt = spdata;

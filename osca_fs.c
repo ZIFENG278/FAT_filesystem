@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 #include "oscafs.h"
-#define LEN 20 // neame of operation only 20 character
+#define LEN 20 // neame of command only 20 character
 char *s_gets(char *st, int n);
 
 /*enum os_function
@@ -18,16 +18,16 @@ char *function_name[] = {"write", "read", "copy host", "ls", "ls -l", "FAT", "co
 int main(void)
 {
     char choice[LEN];
-    //enum os_function operation;
+    //enum os_function command;
     int op = 0;
     bool choice_is_found = false;
 
     FILE *fp = open_fs("OSCAFS");
 
-    printf(GREEN "Enter a operation please (empty to quit): " NONE);
+    printf(GREEN "Enter a command please (empty to quit): " NONE);
     while (s_gets(choice, LEN) != NULL && choice[0] != '\0')
     {
-        for (op = 0; op <= 7; op++) //need to change op <= when add a operation
+        for (op = 0; op <= 7; op++) //need to change op <= when add a command
         {
             if (strcmp(choice, function_name[op]) == 0)
             {
@@ -79,10 +79,10 @@ int main(void)
             }
 
         else
-            printf("OSCAFS haven't \"%s\" operation\n", choice);
+            printf("OSCAFS haven't \"%s\" command\n", choice);
 
         choice_is_found = false;
-        printf(GREEN "Enter next operation (empty to quit OSCAFS): " NONE);
+        printf(GREEN "Enter next command (empty to quit OSCAFS): " NONE);
     }
 
     close_fs(fp);

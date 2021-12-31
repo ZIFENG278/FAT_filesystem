@@ -73,7 +73,7 @@ void os_write_first(FILE *fp)
     int data_length; // Count the number of characters
     char str[NAME_LEN];
     //char data[BLOCK_SIZE];
-    char spdata[5 * BLOCK_SIZE];
+    char spdata[TIME_BLOCK * BLOCK_SIZE];
     char *pt;
     bool same_name = false;
     pt = spdata;
@@ -236,8 +236,8 @@ void os_read(FILE *fp) // mistake in can not identif the input name
     if (have_file)
     {
         //printf("\n");
-        printf(YELLOW "please choice a file: " NONE);
         os_list();
+        printf(YELLOW "please choice a file: " NONE);
         bool true_name = false;
         while (s_gets(file_name, NAME_LEN) != NULL && file_name[0] != '\0')
         {
@@ -308,7 +308,7 @@ void os_seek(void)
         {
             if (strncmp(dentry[i].str, seek_input, strlen(seek_input)) == 0)
             {
-                printf("%s ", dentry[i].str);
+                printf("'%s'  ", dentry[i].str);
                 count++;
             }
         }

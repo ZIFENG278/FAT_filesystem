@@ -84,7 +84,7 @@ void os_copy_host(FILE *fp)
                 fd = write_first_free(file_name_copy);
                 if (fd < 0)
                 {
-                    printf("OSCAFS cannot contain more %d file\n", NUM_DENTRY);
+                    printf("OSCAFS cannot contain more than %d file\n", NUM_DENTRY);
                     break;
                 }
                 fb = write_firstblock_num(fd);
@@ -130,7 +130,7 @@ void os_copy_host(FILE *fp)
     }
 
     else
-        printf("OSCAFS cannot contain more %d file\n", NUM_DENTRY);
+        printf("OSCAFS cannot contain more than %d file\n", NUM_DENTRY);
 }
 
 void os_copy_OSCAFS(FILE *fp)

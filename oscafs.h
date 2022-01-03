@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#define NB_BLOCKS 512
-#define BLOCK_SIZE 8
+#define NB_BLOCKS 512 //inode
+#define BLOCK_SIZE 32
 
-#define NUM_DENTRY 5
+#define NUM_DENTRY 5 //number of file can contain
 //#define STR_LEN 256
 #define TIME_BLOCK 5 // for write maximum 5 block for one time
 #define NAME_LEN 256
@@ -60,6 +60,8 @@ int first_free_block();
 int alloc_block();
 
 int add_next_block(int b);
+
+int count_free_block(void);
 
 /* Block Set
  */

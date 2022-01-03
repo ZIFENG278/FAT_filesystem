@@ -1,7 +1,7 @@
 #include "oscafs.h"
 
 #define FREE_BLK 0
-#define EOF_BLK -1
+//#define EOF_BLK -1
 
 // Error Values
 #define NO_FREE_BLK -2
@@ -70,4 +70,19 @@ int add_next_block(int b)
     }
 
     return NO_FREE_BLK;
+}
+
+int count_free_block(void)
+{
+    int i;
+    int count = 0;
+    for (i = 1; i < NB_BLOCKS; i++)
+    {
+        if (fat[i] == FREE_BLK)
+        {
+            count++;
+        }
+    }
+
+    return count;
 }

@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #define NB_BLOCKS 512 //inode
-#define BLOCK_SIZE 32
+#define BLOCK_SIZE 1024
 
 #define NUM_DENTRY 5 //number of file can contain
 //#define STR_LEN 256
@@ -63,6 +63,8 @@ int add_next_block(int b);
 
 int count_free_block(void);
 
+void init_single_fat(int i);
+
 /* Block Set
  */
 int block_offset(int b);
@@ -89,6 +91,8 @@ void os_read(FILE *fp);
 void os_fat(void);
 
 void os_seek(void);
+
+void os_delete(FILE *fp);
 
 //os copy function
 int file_size(char *filename);

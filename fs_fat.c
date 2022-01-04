@@ -86,3 +86,8 @@ int count_free_block(void)
 
     return count;
 }
+
+void init_single_fat(int i)
+{
+    fat[i] = FREE_BLK;
+}

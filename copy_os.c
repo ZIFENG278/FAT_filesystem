@@ -63,7 +63,7 @@ void os_copy_host(FILE *fp)
             {
                 int num_block;
                 int size = file_size(file_name_copy);
-                printf("for test size: %d\n", size); //for test
+                //printf("for test size: %d\n", size); //for test
                 if (size % BLOCK_SIZE == 0)
                     num_block = size / BLOCK_SIZE;
                 else
@@ -98,7 +98,7 @@ void os_copy_host(FILE *fp)
                     {
                         strncpy(databuf[count], pt + (sizeof(spdata) - (num_block - count) * BLOCK_SIZE), BLOCK_SIZE);
                         databuf[count][BLOCK_SIZE] = '\0';
-                        printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
+                        //printf("databuf%d: %-8s | in block: %d\n", count + 1, databuf[count], fb); //for check data if correct
                         write_block(fb, databuf[count], fp);
                         //printf("%d ", fb); // for test
                         if (count_alloc < num_block)

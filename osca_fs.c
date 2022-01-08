@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include "oscafs.h"
 //#define LEN 256 // neame of command only 20 character
-char *s_gets(char *st, int n);
+//char *s_gets(char *st, int n);
 
 /*enum os_function
 {

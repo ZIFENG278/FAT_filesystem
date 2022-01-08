@@ -22,4 +22,3 @@ clean:
 	rm -f *~
 	rm -f *.o
 	rm -f ${TARGET}
-	

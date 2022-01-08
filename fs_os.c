@@ -261,7 +261,10 @@ void os_read(FILE *fp) // mistake in can not identif the input name
                 // printf("%d\n", fb); //for test
                 read_block(fb, data, fp);
                 data[BLOCK_SIZE] = '\0';
-                printf("%s", data);
+                if (data == '\0')
+                    printf(" ");
+                else
+                    printf("%s", data);
                 while (fat[fb] != EOF_BLK)
                 {
                     char bufdata[BLOCK_SIZE];

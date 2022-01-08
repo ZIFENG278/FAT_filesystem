@@ -1,11 +1,11 @@
 #include <stdio.h>
 
-#define NB_BLOCKS 512 //inode
+#define NB_BLOCKS 513 //inode
 #define BLOCK_SIZE 1024
 
-#define NUM_DENTRY 5 //number of file can contain
+#define NUM_DENTRY 128 //number of file can contain
 //#define STR_LEN 256
-#define TIME_BLOCK 5 // for write maximum 5 block for one time
+//#define TIME_BLOCK 5 // for write maximum 5 block for one time
 #define NAME_LEN 256
 
 #define EOF_BLK -1

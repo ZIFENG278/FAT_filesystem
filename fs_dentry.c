@@ -49,12 +49,12 @@ int return_first_entry()
 }
 
 /* copy string str into entry i
-   return length of copied string
+return length of copied string
 */
 int write_entry(int i, char *str)
 {
     char *dest = strncpy(dentry[i].str, str, NAME_LEN);
-    dentry[i].str[NAME_LEN] = '\0';
+    //dentry[i].str[NAME_LEN - 1] = '\0';
 
     return strlen(dest);
 }

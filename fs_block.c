@@ -13,11 +13,11 @@ int block_offset(int b)
 int read_block(int b, char *buf, FILE *fp)
 {
     fseek(fp, block_offset(b), SEEK_SET);
-    return fread(buf, BLOCK_SIZE, 1, fp);
+    return fread(buf, 1, BLOCK_SIZE, fp);
 }
 
 int write_block(int bn, char *buf, FILE *fp)
 {
     fseek(fp, block_offset(bn), SEEK_SET);
-    return fwrite(buf, BLOCK_SIZE, 1, fp);
+    return fwrite(buf, 1, BLOCK_SIZE, fp);
 }

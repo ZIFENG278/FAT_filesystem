@@ -75,7 +75,7 @@ void os_copy_host(FILE *fp)
                 {
                     char spdata[num_block * BLOCK_SIZE];
                     pt = spdata;
-                    fread(spdata, size, 1, file_host);
+                    fread(spdata, 1, size, file_host);
                     spdata[size] = '\0';
                     //printf("spdata:%s\n", spdata); // for test
                     //printf("spdata strlen is %d\n", strlen(spdata));  //for test
@@ -179,7 +179,7 @@ void os_copy_OSCAFS(FILE *fp)
                     read_block(fb, data, fp);
                     data[BLOCK_SIZE] = '\0';
                     //printf("%s", data); // for test
-                    fwrite(data, BLOCK_SIZE, 1, file_host);
+                    fwrite(data, 1, BLOCK_SIZE, file_host);
                     int count_seek = 1;
                     while (fat[fb] != EOF_BLK)
                     {
@@ -191,7 +191,7 @@ void os_copy_OSCAFS(FILE *fp)
                         bufdata[BLOCK_SIZE] = '\0';
                         //printf("%s", bufdata); for test
                         fseek(file_host, count_seek * BLOCK_SIZE, SEEK_SET);
-                        fwrite(bufdata, BLOCK_SIZE, 1, file_host);
+                        fwrite(bufdata, 1, BLOCK_SIZE, file_host);
                         count_seek++;
                     }
                     //printf("done\n");

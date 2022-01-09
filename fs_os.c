@@ -227,8 +227,9 @@ void os_read(FILE *fp) // mistake in can not identif the input name
     int fb; // first block in file
     bool have_file = false;
     char file_name[NAME_LEN];
-    char data[BLOCK_SIZE];
+    //char data[BLOCK_SIZE];
     int temp; //for change the value of fat table
+    int count_block = 1;
     for (i = 0; i < NUM_DENTRY; i++)
     {
         if (dentry[i].str[0] != '\0')
@@ -258,6 +259,7 @@ void os_read(FILE *fp) // mistake in can not identif the input name
             {
                 //printf("\n");
                 fb = dentry[j].num;
+                char data[BLOCK_SIZE];
                 // printf("%d\n", fb); //for test
                 read_block(fb, data, fp);
                 data[BLOCK_SIZE] = '\0';

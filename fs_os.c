@@ -229,7 +229,6 @@ void os_read(FILE *fp) // mistake in can not identif the input name
     char file_name[NAME_LEN];
     //char data[BLOCK_SIZE];
     int temp; //for change the value of fat table
-    int count_block = 1;
     for (i = 0; i < NUM_DENTRY; i++)
     {
         if (dentry[i].str[0] != '\0')
@@ -279,6 +278,7 @@ void os_read(FILE *fp) // mistake in can not identif the input name
                 printf("\n");
                 //printf(YELLOW "\ndone\n" NONE);
                 printf(YELLOW "Enter file name to read other one (empty to quit): " NONE);
+                memset(data, 0, sizeof(data));
             }
 
             else

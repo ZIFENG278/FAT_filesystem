@@ -4,7 +4,7 @@
 >
 > Developer: Zifeng ZHANG
 >
-> Tutor: Sami TAKTAK
+> Tutor: [Sami TAKTAK](https://cedric.cnam.fr/lab/author/taktak/)
 >
 > Date:09/01/2022
 
@@ -17,7 +17,7 @@ OSCAFS is currently designed as a file system that can hold 512KB and can store 
 
 OSCAFS uses the FAT table to index data blocks, so file writing and file reading use a chain structure to ensure that there is no waste of data blocks between disk blocks.
 
-
+![picture](https://github.com/ZIFENG278/FAT_filesystem/blob/master/assests/image/FAT_filesystem.png?raw=true)
 
 ## File content information
 

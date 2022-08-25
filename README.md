@@ -46,7 +46,7 @@ OSCAFS uses the FAT table to index data blocks, so file writing and file reading
 2. **"read"**  : To read file content
 3. **"seek"** :  Search files by file name
 4. **"copy host"**  :  Copy file from local to OSCAFS
-5. **"copy OSCAFS" ** : Copy OSCAFS file to local
+5. **"copy OSCAFS"** : Copy OSCAFS file to local
 6. **"rm"** : Delet file
 7. **"ls"**  : List all files
 8. **"ls -l"** :  List files detail information
